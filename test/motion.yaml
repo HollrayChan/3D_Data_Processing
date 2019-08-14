@@ -1,0 +1,25 @@
+header:
+  seq: 0
+  stamp: 0.000000000 
+  frame_id: 0
+poses[]:
+  poses[0]:
+    position:
+      x: 0.000000 
+      y: 0.000000 
+      z: 0.000000 
+    orientation:
+      x: 0.000000
+      y: 0.000000
+      z: 0.000000
+      w: 1.000000
+  poses[1]:
+    position:
+      x: 0.898840 
+      y: 0.040213 
+      z: -0.115444 
+    orientation:
+      x: 0.002279
+      y: -0.000278
+      z: -0.024859
+      w: 0.999688
