@@ -1,6 +1,6 @@
-# 3Dpoint-reprojection
-3D_Data_Processing
+# 3D_Data_Processing
 
+main according to SFM_result
 Original image ：
 ![image](https://github.com/Konichanx/3Dpoint-reprojection/blob/master/test/Camera_1-000001.png)
 
