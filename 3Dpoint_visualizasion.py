@@ -1,6 +1,6 @@
 # downsample :the size of images and neican
 #endoscopy images  is  1600/1200=1.3333
-#
+
 from plyfile import PlyData, PlyElement
 import numpy as np
 import yaml
@@ -67,19 +67,6 @@ def get_data_balancing_scale(poses, images_count):
     return traveling_distance
 
 def quaternion_matrix(quaternion):  
-    """Return homogeneous rotation matrix from quaternion.
-
-    >>> M = quaternion_matrix([0.99810947, 0.06146124, 0, 0])
-    >>> numpy.allclose(M, rotation_matrix(0.123, [1, 0, 0]))
-    True
-    >>> M = quaternion_matrix([1, 0, 0, 0])
-    >>> numpy.allclose(M, numpy.identity(4))
-    True
-    >>> M = quaternion_matrix([0, 1, 0, 0])
-    >>> numpy.allclose(M, numpy.diag([1, -1, -1, 1]))
-    True
-
-    """
     q = np.array(quaternion, dtype=np.float64, copy=True)
     n = np.dot(q, q)
     if n < np.finfo(float).eps * 4.0:
@@ -143,42 +130,32 @@ def two_view_point_projection(point_cloud_list, projection_matrices, ori_image_h
     coords_white = np.zeros((len(projection_matrices), ori_image_h, ori_image_w))
     for i in range(len(projection_matrices)):
         projection_matrix = projection_matrices[i]
-#        print('projection_matrix',projection_matrix.shape)
+
         for j in range(len(point_cloud_list)):
             point_projected_undistorted = np.asarray(projection_matrix).dot(point_cloud_list[j])
             point_projected_undistorted = point_projected_undistorted / point_projected_undistorted[2]
-#            doc_print(point_projected_undistorted)
             coords[i,int(round(point_projected_undistorted[0])),int(round(point_projected_undistorted[1]))] = point_cloud[j][2]
             coords_white[i,int(round(point_projected_undistorted[0])),int(round(point_projected_undistorted[1]))] = 255
-#            point.append(point_projected_undistorted)
-#            print(point_projected_undistorted, file = doc)
-#            print(point_projected_undistorted)    
+   
     return coords, coords_white
-#, np.savetxt('/home/chan/Desktop/3Dpoint_visualizasion/test/image.txt', coords[1,:,:],fmt="%.3f", delimiter='  ') 
+#  np.savetxt('/home/chan/Desktop/3Dpoint_visualizasion/test/image.txt', coords[1,:,:],fmt="%.3f", delimiter='  ') 
 
 def doc_print(varible):
     txet = open('out.txt','w')
     print(varible,file=txet)
     txet.close()
-#    with open(path + 'view_indexes_per_point_filtered') as fp:
-#        for line in fp:
-#            if int(line) < 0:
-#                point_count = point_count + 1
+
     
 
 def multi_dim_image_visual(path, multi_dim_image): 
-#    print(multi_dim_image.shape)
     for i in range(multi_dim_image.shape[0]):
         one_multi_dim_image = np.transpose(multi_dim_image[i,:,:])
-#        print(one_multi_dim_image.shape)
         img = os.path.join(path,'image_%d.png'%i)
         imageio.imwrite(img, one_multi_dim_image)
         
 def multi_dim_image_white_visual(path, multi_dim_image): 
-#    print(multi_dim_image.shape)
     for i in range(multi_dim_image.shape[0]):
         one_multi_dim_image = np.transpose(multi_dim_image[i,:,:])
-#        print(one_multi_dim_image.shape)
         img = os.path.join(path,'image_white_%d.png'%i)
         imageio.imwrite(img, one_multi_dim_image)
 
@@ -194,16 +171,13 @@ if __name__ == '__main__':
     #processing
     print('Process is beiginning')
     point_cloud = read_point_cloud(path)
-#    print(point_cloud[0])
     camera_intrinsics = read_camera_intrinsic_per_view(path, ds_ratio)
     print(' modified camera_intrinsics is \n',camera_intrinsics)
     pose , num_images = read_pose_data(path)
     scale = get_data_balancing_scale(pose, num_images)
-    print(scale)
     extrinsic_matrix, projection_matrix = get_extrinsic_matrix_and_projection_matrix(pose, camera_intrinsics, num_images)
     per_point = read_view_indexes_per_point(path , len(point_cloud))
-    print(per_point.shape)
-    [cat_images, cat_image_white] = two_view_point_projection(point_cloud, projection_matrix, ori_image_h, ori_image_w)
+    cat_images, cat_image_white = two_view_point_projection(point_cloud, projection_matrix, ori_image_h, ori_image_w)
     multi_dim_image_visual(path, cat_images)
     multi_dim_image_white_visual(path, cat_image_white)
     
